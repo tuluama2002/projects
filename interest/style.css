@@ -4,9 +4,6 @@ body {
 
 }
 
-p header{
-    color: blue;
-}
 
 main {
     color: brown;
@@ -14,6 +11,10 @@ main {
 
 footer {
     color: blueviolet;
+}
+
+#headerp {
+    color: blue;
 }
 
 .secondparagraph {
