@@ -1,6 +1,6 @@
 body {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    background-color: blanchedalmond;
+    background-color: #eecb96;
 
 }
 
@@ -13,12 +13,17 @@ footer {
     color: blueviolet;
 }
 
+#topic {
+    color: #5c1f25;
+}
+
 #headerp {
     color: blue;
 }
 
 .secondparagraph {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: peachpuff;
 
 }
 
