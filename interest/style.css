@@ -21,6 +21,10 @@ footer {
     color: blue;
 }
 
+span {
+    color: rgb(151, 4, 4);
+}
+
 .secondparagraph {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     color: rgb(186, 86, 86);
