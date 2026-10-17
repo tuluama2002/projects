@@ -21,6 +21,7 @@ header {
     font-family:Georgia, 'Times New Roman', Times, serif;
     background-color: rgb(75, 6, 48);
     background-image:url(hih.jpg);
+    background-size: cover;
     color: rgb(24, 2, 2);
     text-align:center;
     padding:20px;
