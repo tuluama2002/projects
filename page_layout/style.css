@@ -20,12 +20,12 @@ main{
 header {
     font-family:Georgia, 'Times New Roman', Times, serif;
     background-color: rgb(75, 6, 48);
-    background-image:url(hih.jpg);
+    background-image:url(texture.png);
     background-size: cover;
     color: rgb(24, 2, 2);
     text-align:center;
     padding:20px;
-    border: 10px dashed white;
+    border: none;
     background-repeat: no-repeat;
     background-size: cover;
     background-origin: content-box;
