@@ -93,3 +93,30 @@ footer {
 footer a { 
     display: block; 
 }
+
+@media print{
+    nav, .sidebar{
+        display:none;
+    }
+    body{
+        color:black;
+    }
+}
+
+@media (max-width: 680px){
+    .layout{
+        flex-direction: column;
+    }
+    .sidebar{
+        width: 100%;
+    }
+    .card{
+        flex: 1 1 100%;
+    }
+    nav{
+        flex-wrap: wrap;
+    }
+    nav a{
+        padding: 14px 20px;
+    }
+}
