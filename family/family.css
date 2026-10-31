@@ -42,6 +42,7 @@ header{
 
 nav{
     display: flex;
+    flex-direction: column;
     gap:20px;
     justify-content: space-around;
     background: #f2f2f2;
@@ -88,11 +89,17 @@ nav a{
 footer {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  text-align:center;
+  background-color:#005f66;
+  color:#fff;
+  padding:12px
 }
 
 footer a { 
     display: block; 
+    margin: 0;
 }
+
 
 @media print{
     nav, .sidebar{
