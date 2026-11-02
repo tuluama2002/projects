@@ -72,23 +72,29 @@
     }
 
 function player(){
-    h(`<h1>Join the Quiz</h1><p>Enter the PIN from the screen</p><input id="pin" inputmode="numeric" placeholder="PIN"><br><br><input id="nm" placeholder="Your nickname"><br><br><button id="go">Join</button><p id="msg"></p>`);
-    document.getElementById("go").onclick=()=>{
-    const pin=document.getElementById("pin").value.trim(),nm=document.getElementById("nm").value.trim()||"Player";
-    const peer=new Peer();peer.on("open",()=>{const c=peer.connect("misfitquiz"+pin,{reliable:true});
-    c.on("open",()=>c.send({t:"join",name:nm}));
-    c.on("data",d=>{
-        if(d.t==="joined")h(`<h1>You're in, ${nm}!</h1><p>Watch the big screen.</p>`);
-        if(d.t==="q"){h(`<p>Pick your answer</p><div class="grid">${Array.from({length:d.n},(_,i)=>`<button class="ans c${i}" data-i="${i}">${["▲","◆","●","■"][i]}</button>`).join("")}</div>`);
-        document.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>{c.send({t:"ans",i:+b.dataset.i});h(`<h1>Answer sent!</h1><p>Waiting for others...</p>`)});}
-        if(d.t==="res")h(`<h1 class="big">${d.ok?"✅ Correct!":"❌ Not this time"}</h1><p>+${d.pts} points</p><p>Total: ${d.score}</p>`);
-        if(d.t==="end")h(`<h1>Game over!</h1><p>Look at the big screen to see the winners.</p>`);
-    });
-    c.on("error",()=>document.getElementById("msg")&&0);
-    });
-    peer.on("error",()=>{h(`<h1>Oops</h1><p>Could not connect. Check the PIN and try again.</p><button onclick="location.reload()">Retry</button>`)});
-    };
-    }
+ h(`<h1>Join the Quiz</h1><p>Enter the PIN from the screen</p><input id="pin" type="tel" inputmode="numeric" placeholder="PIN"><br><br><input id="nm" placeholder="Your nickname"><br><br><button id="go" type="button">Join</button><p id="msg"></p>`);
+ const msg=t=>{const m=document.getElementById("msg");if(m)m.textContent=t};
+ document.getElementById("go").onclick=()=>{
+  const pin=document.getElementById("pin").value.trim(),nm=document.getElementById("nm").value.trim()||"Player";
+  if(!pin){msg("Type the PIN first.");return;}
+  msg("Connecting...");
+  let done=false;
+  const fail=t=>{if(done)return;done=true;h(`<h1>Oops</h1><p>${t}</p><button onclick="location.reload()">Try again</button>`)};
+  const peer=new Peer();
+  const to=setTimeout(()=>fail("Could not connect. Check the PIN, make sure the host screen is open, and try mobile data if school Wi-Fi blocks it."),12000);
+  peer.on("error",e=>fail(e.type==="peer-unavailable"?"That PIN was not found. Check the number on the big screen.":"Connection problem ("+e.type+")."));
+  peer.on("open",()=>{const c=peer.connect("misfitquiz"+pin,{reliable:true});
+   c.on("open",()=>{c.send({t:"join",name:nm});});
+   c.on("data",d=>{
+    if(d.t==="joined"){clearTimeout(to);done=true;h(`<h1>You're in, ${nm}!</h1><p>Watch the big screen.</p>`);}
+    if(d.t==="q"){h(`<p>Pick your answer</p><div class="grid">${Array.from({length:d.n},(_,i)=>`<button class="ans c${i}" data-i="${i}">${["▲","◆","●","■"][i]}</button>`).join("")}</div>`);
+     document.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>{c.send({t:"ans",i:+b.dataset.i});h(`<h1>Answer sent!</h1><p>Waiting for others...</p>`)});}
+    if(d.t==="res")h(`<h1 class="big">${d.ok?"✅ Correct!":"❌ Not this time"}</h1><p>+${d.pts} points</p><p>Total: ${d.score}</p>`);
+    if(d.t==="end")h(`<h1>Game over!</h1><p>Look at the big screen to see the winners.</p>`);
+   });
+  });
+ };
+}
 </script>
 </body>
 </html>
