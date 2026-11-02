@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misfit Quiz</title>
+    <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#46178f;color:#fff;text-align:center;min-height:100vh}
+    .wrap{max-width:900px;margin:0 auto;padding:20px}
+    h1{font-size:2.2em;margin:.3em 0}
+    button{font-size:1.2em;padding:14px 24px;border:0;border-radius:8px;background:#fff;color:#46178f;font-weight:bold;cursor:pointer;margin:6px}
+    input{font-size:1.3em;padding:12px;border-radius:8px;border:0;width:80%;max-width:320px;text-align:center}
+    .pin{font-size:4em;letter-spacing:.15em;background:#fff;color:#46178f;border-radius:12px;padding:10px;display:inline-block;margin:10px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+    .ans{padding:28px 10px;border-radius:10px;font-size:1.3em;font-weight:bold;color:#fff;border:0;margin:0}
+    .c0{background:#e21b3c}.c1{background:#1368ce}.c2{background:#d89e00}.c3{background:#26890c}
+    .q{font-size:1.9em;margin:20px 0}
+    .lb{background:rgba(255,255,255,.15);border-radius:10px;padding:10px 20px;text-align:left;max-width:500px;margin:10px auto}
+    .lb div{display:flex;justify-content:space-between;padding:6px 0;font-size:1.3em}
+    .hide{display:none}.big{font-size:3em}
+    .dim{opacity:.35}.ok{outline:6px solid #fff}
+    #timer{font-size:2.5em;font-weight:bold}
+    </style>
+    </head>
+    <body>
+        <div class="wrap" id="app">
+    </div>
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+    <script>
+    const QS=[
+        {q:"Flannery O'Connor wrote about the American South. Which of these is the most Southern thing?",a:["Sweet tea","Kale smoothie","Avocado toast","A giant cup of oat milk"],c:0},
+        {q:"O'Connor famously raised which bird?",a:["Peacocks","Penguins","Pigeons with attitude","Chickens that judge you"],c:0},
+        {q:"A good man is hard to find. What is harder to find on campus?",a:["A parking spot","A working outlet","Free food that's still there","Someone who did the reading"],c:-1},
+        {q:"How does the family travel in the story?",a:["Road trip to Florida","Private jet","Hawaiian canoe","One very long Zoom call"],c:0},
+        {q:"Who is \"The Misfit\"?",a:["An escaped convict","The family cat","The world's worst substitute teacher","A guy who just wants his homework back"],c:0},
+        {q:"True or false: O'Connor's stories often end with a dark twist.",a:["True","False, always a group hug"],c:0},
+        {q:"How many people are presenting today?",a:["Four","Zero, we hope for a snow day","Twelve","Just Gabe"],c:0}
+    ];
+    const TIME=15, app=document.getElementById("app");
+    const ID=()=>"misfit"+Math.floor(1000+Math.random()*9000);
+    const mode=location.hash==="#host"?"host":"play";
+    const h=(s)=>app.innerHTML=s;
+    if(mode==="host")host();else player();
+
+    function host(){
+    const pin=ID().slice(6), pid="misfitquiz"+pin; 
+    let players={}, conns={}, cur=-1, answered={}, t0=0, timer=null, locked=true;
+    const peer=new Peer(pid);
+    peer.on("error",e=>{if(e.type==="unavailable-id")location.reload();});
+    peer.on("connection",c=>{c.on("data",d=>{
+    if(d.t==="join"){players[c.peer]={name:d.name.slice(0,14),score:0};conns[c.peer]=c;c.send({t:"joined"});lobby();}
+    if(d.t==="ans"&&!locked&&!(c.peer in answered)){answered[c.peer]={i:d.i,ms:Date.now()-t0};c.send({t:"got"});
+        if(Object.keys(answered).length===Object.keys(players).length)reveal();else counter();}
+    });c.on("close",()=>{});});
+    function names(){return Object.values(players).map(p=>p.name)}
+    function lobby(){if(cur>=0)return;h(`<h1>Join the Quiz!</h1><p>On your phone, open:</p><p><b>${location.href.split("#")[0]}</b></p><div class="pin">${pin}</div><p class="big">${names().length} players</p><p>${names().join(" · ")}</p><button onclick="window.next()">Start game</button>`)}
+    function counter(){const e=document.getElementById("cnt");if(e)e.textContent=Object.keys(answered).length+" / "+Object.keys(players).length+" answered"}
+    window.next=function(){cur++;if(cur>=QS.length)return finish();answered={};locked=false;t0=Date.now();
+    const q=QS[cur];
+    h(`<div id="timer">${TIME}</div><div class="q">${cur+1}. ${q.q}</div><div class="grid">${q.a.map((x,i)=>`<div class="ans c${i}">${x}</div>`).join("")}</div><p id="cnt"></p>`);
+    Object.values(conns).forEach(c=>c.send({t:"q",n:q.a.length,idx:cur}));
+    let left=TIME;clearInterval(timer);timer=setInterval(()=>{left--;const e=document.getElementById("timer");if(e)e.textContent=left;if(left<=0)reveal();},1000);};
+    function reveal(){if(locked)return;locked=true;clearInterval(timer);const q=QS[cur];
+    Object.keys(players).forEach(id=>{const a=answered[id];let pts=0;
+    if(a&&(q.c===-1||a.i===q.c)){pts=Math.round(1000-(a.ms/(TIME*1000))*500);if(pts<500)pts=500;}
+    players[id].score+=pts;if(conns[id])conns[id].send({t:"res",ok:pts>0,pts,score:players[id].score});});
+    const top=Object.values(players).sort((a,b)=>b.score-a.score).slice(0,5);
+    h(`<div class="q">${q.c===-1?"No wrong answers, everyone who answered scores!":"Answer: "+q.a[q.c]}</div><h2>Leaderboard</h2><div class="lb">${top.map((p,i)=>`<div><span>${i+1}. ${p.name}</span><span>${p.score}</span></div>`).join("")}</div><button onclick="window.next()">${cur+1>=QS.length?"Final results":"Next question"}</button>`);}
+    function finish(){const all=Object.values(players).sort((a,b)=>b.score-a.score);
+    Object.values(conns).forEach(c=>c.send({t:"end"}));
+    h(`<h1>🏆 Winners!</h1><div class="lb">${all.slice(0,5).map((p,i)=>`<div><span>${["🥇","🥈","🥉","4.","5."][i]} ${p.name}</span><span>${p.score}</span></div>`).join("")}</div><p>Now let's talk about the woman behind the peacocks.</p>`);}
+    peer.on("open",()=>lobby());
+    }
+
+function player(){
+    h(`<h1>Join the Quiz</h1><p>Enter the PIN from the screen</p><input id="pin" inputmode="numeric" placeholder="PIN"><br><br><input id="nm" placeholder="Your nickname"><br><br><button id="go">Join</button><p id="msg"></p>`);
+    document.getElementById("go").onclick=()=>{
+    const pin=document.getElementById("pin").value.trim(),nm=document.getElementById("nm").value.trim()||"Player";
+    const peer=new Peer();peer.on("open",()=>{const c=peer.connect("misfitquiz"+pin,{reliable:true});
+    c.on("open",()=>c.send({t:"join",name:nm}));
+    c.on("data",d=>{
+        if(d.t==="joined")h(`<h1>You're in, ${nm}!</h1><p>Watch the big screen.</p>`);
+        if(d.t==="q"){h(`<p>Pick your answer</p><div class="grid">${Array.from({length:d.n},(_,i)=>`<button class="ans c${i}" data-i="${i}">${["▲","◆","●","■"][i]}</button>`).join("")}</div>`);
+        document.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>{c.send({t:"ans",i:+b.dataset.i});h(`<h1>Answer sent!</h1><p>Waiting for others...</p>`)});}
+        if(d.t==="res")h(`<h1 class="big">${d.ok?"✅ Correct!":"❌ Not this time"}</h1><p>+${d.pts} points</p><p>Total: ${d.score}</p>`);
+        if(d.t==="end")h(`<h1>Game over!</h1><p>Look at the big screen to see the winners.</p>`);
+    });
+    c.on("error",()=>document.getElementById("msg")&&0);
+    });
+    peer.on("error",()=>{h(`<h1>Oops</h1><p>Could not connect. Check the PIN and try again.</p><button onclick="location.reload()">Retry</button>`)});
+    };
+    }
+</script>
+</body>
+</html>
