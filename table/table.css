@@ -16,8 +16,8 @@ header{
 
 .sidebar {
     width: 30%;
-    background-color: #50422c;
-    color: #fff;
+    background-color: #ebc58a;
+    color: #030303;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -38,6 +38,7 @@ header{
 
 #album{
     border: 1px solid black;
+    width: 100%;
 
 }
 
@@ -49,7 +50,8 @@ header{
 
 table {
   border-collapse: collapse;
-  border-spacing: 10px;
+  border-spacing: 20px;
+ 
 }
 
 th {
@@ -74,13 +76,20 @@ nav a{
     border-bottom: thin solid white;
 }
 
-
-#album tr:first-child{
+nav a:hover{
+    background-color:#8c0000;
     font-weight: bold;
+    color:#f2f2f2;
+}
+
+caption{
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: bold;
+    font-size: larger;
 }
 
 #album tbody tr:nth-child(even){
-    background-color: #cdedff;
+    background-color: #df3c57;
 }
 
 #album tbody tr:nth-child(3){
@@ -88,7 +97,38 @@ nav a{
     border-color: rgb(94, 3, 3);
 }
 
-.sidebar h2 {
-  color: white;
+#album tbody tr:hover{
+    background-color: #8c0000;
+    font-weight: bold;
+    cursor:pointer;
 }
 
+.sidebar h2 {
+  color: rgb(14, 13, 13);
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+footer {
+  text-align:center;
+  background-color:#8c0000;
+  color:#fff;
+  padding:12px;
+}
+
+@media (max-width: 680px){
+    .layout{
+        flex-direction: column;
+    }
+    .sidebar{
+        width: 100%;
+    }
+    .card{
+        flex: 1 1 100%;
+    }
+    nav{
+        flex-direction: column;
+    }
+    nav a{
+        padding: 14px 20px;
+    }
+}
