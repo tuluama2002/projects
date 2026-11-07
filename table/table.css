@@ -2,16 +2,46 @@ body{
     font-family: Arial, Helvetica, sans-serif;
 }
 
+main{
+    flex: 1;
+    padding: 20px;
+}
+
+header{
+    background-color:#8c0000;
+    color:#fff;
+    text-align:center;
+    padding:20px;  
+}
+
+.sidebar {
+    width: 30%;
+    background-color: #50422c;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 10px;
+
+}
+
 .tablediv{
     overflow-x: auto;
 }
 
-#schedule{
-    /*border: 1px solid black;*/
+.layout{
+    display: flex;
+
 
 }
 
-#schedule th, #schedule td {
+#album{
+    border: 1px solid black;
+
+}
+
+#album th, #album td {
     border: 1px solid black;
     
     
@@ -23,19 +53,42 @@ table {
 }
 
 th {
-  background-color: navy;
+  background-color: rgb(128, 0, 0);
   color: white;
 }
 
-#schedule tbody tr:first-child{
+nav{
+    display: flex;
+    flex-wrap: wrap;
+    gap:20px;
+    justify-content: space-around;
+    background: #f2f2f2;
+    padding: 10px;
+}
+
+nav a{
+    display: block;
+    padding: 5px;
+    background-color: blanchedalmond;
+    color:black;
+    border-bottom: thin solid white;
+}
+
+
+#album tr:first-child{
     font-weight: bold;
 }
 
-#schedule tbody tr:nth-child(even){
+#album tbody tr:nth-child(even){
     background-color: #cdedff;
 }
 
-#schedule tbody tr:nth-child(3){
+#album tbody tr:nth-child(3){
 
     border-color: rgb(94, 3, 3);
 }
+
+.sidebar h2 {
+  color: white;
+}
+
