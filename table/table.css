@@ -12,6 +12,7 @@ header{
     color:#fff;
     text-align:center;
     padding:20px;  
+    font-family:Georgia, 'Times New Roman', Times, serif;
 }
 
 .sidebar {
@@ -89,7 +90,7 @@ caption{
 }
 
 #album tbody tr:nth-child(even){
-    background-color: #df3c57;
+    background-color: #f2d6dc;
 }
 
 #album tbody tr:nth-child(3){
