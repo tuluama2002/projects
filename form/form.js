@@ -25,3 +25,31 @@
             password: password,
             age: age
         });
+
+        console.log(formData);
+        alert("Form Submitted");
+        console.log(formData);
+            alert("Form Submited");
+            const xhr = new XMLHttRequest();
+            xhr.open("GET", "submit.json", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function (){
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    //alert('form submitted successfully.');
+                    message = document.getElementById('message');
+                    const response = JSON.parse(xhr.responseText);
+                    message.textContent = response.message;
+                    form = document.getElementById('myForm');
+                        form.reset();
+                        //cleaar the message
+                       // form.textContent ='';
+                        
+                    
+
+                } else if (xhr.readyState ===4) {
+                    alert('error submitting form.');
+                }
+            };
+            xhr.send(JSON.stringfy(formData));
+            alert('Success: ${firstName} ${lastName}');
+            
