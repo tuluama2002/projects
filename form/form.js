@@ -45,11 +45,6 @@
                     alert('error submitting form.');
                 }
             };
-            xhr.onreadystatechange = function (){
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
-                document.getElementById("success-message").textContent= response.message;
-                } else if (xhr.readyState ==4) {
-                    alert('error submitting form.');
-                }
- };
+            xhr.send(JSON.stringfy(formData));
+            document.getElementById('success-message').textContent='Success! Right On ${fullname}, you are signed up!';
+ });
