@@ -52,4 +52,4 @@
                 } else if (xhr.readyState ==4) {
                     alert('error submitting form.');
                 }
- });
+ };
