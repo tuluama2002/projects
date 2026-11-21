@@ -39,7 +39,7 @@
                 </div>
                 <div class="form-row">
                     <label for="phone">Phone</label>
-                <input id="phone" type="phone" name="phone" placeholder="phone">
+                <input id="phone" type="tel" name="phone" placeholder="phone">
                 </div>
                 <div class="form-row">
                     <label for="age">Age</label>
@@ -70,30 +70,30 @@
                
               
             </fieldset>
-        </form>
-         <fieldset>
-            <legend>club service</legend>
-            <div class="form-row">
-
+        
+            <fieldset>
+                <legend>club service</legend>
+                <div class="form-row">
                     <label for="service">Service Type</label>
-                    <Select name="service" id="service">
+                     <Select name="service" id="service">
                         <option value="blank"></option>
                         <option value="blood donation">Blood donation</option>
                         <option value="trash pick-up">Trash pick-up</option>
                         <option value="Car wash">Car wash</option>
                     </Select>
-                     <div class="form-row">
-                    <label for="Notes">Notes</label>
+                </div>
+
+                <div class="form-row">
+                    <label for="comments">Comments</label>
                     <textarea name="comments" id="comments"></textarea>
-                     </div>
-                     
-         </fieldset>
-          <div class="check-row">
-                        <div class="spacer"></div>
-                        <button type="submit">Sign up</button>
-                    </div>
-                
-            </div>
+                </div>            
+            </fieldset>
+                <div class="check-row">
+                    <div class="spacer"></div>
+                    <button type="submit">Sign up</button>
+                </div>
+                <div id ="message"></div>
+        </form>    
     </main>
 
     <footer>
@@ -132,10 +132,38 @@
         
         console.log(formData);
         alert("Form Submitted");
+        console.log(formData);
+            alert("Form Submited");
+            const xhr = new XMLHttRequest();
+            xhr.open("GET", "submit.json", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function (){
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    //alert('form submitted successfully.');
+                    message = document.getElementById('message');
+                    const response = JSON.parse(xhr.responseText);
+                    message.textContent = response.message;
+                    form = document.getElementById('myForm');
+                        form.reset();
+                        //cleaar the message
+                       // form.textContent ='';
+                        
+                    
+
+                } else if (xhr.readyState ===4) {
+                    alert('error submitting form.');
+                }
+            };
+            xhr.send(JSON.stringfy(formData));
+            alert('Success: ${firstName} ${lastName}');
+            
+
 
 
 
 
     });
+
+    
 </body>
 </html>
