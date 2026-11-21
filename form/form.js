@@ -47,4 +47,4 @@
             };
             xhr.send(JSON.stringfy(formData));
             alert('Success: ${firstName} ${lastName}');
-            
+ });
