@@ -8,13 +8,13 @@
         const password = document.getElementById('password').value;
         const age = document.getElementById('age').value;
         
-        if (!fullname || !email) {
-            alert("you need a  name and email.");
+        if (!fullname || !email || !bdate) {
+            alert("you need a  name, email and birth date.");
             return;
 
         }
 
-        if (!age || age<16){
+        if (!age || age<16 ||NavigationDestination(age) || age < 17){
             alert("you need to be 17");
             return;
         }
@@ -23,26 +23,21 @@
             name: fullname,
             email: email,
             password: password,
-            age: age
-        });
+            age: age,
+            bdate: bdate
+        };
 
+        
         console.log(formData);
-        alert("Form Submitted");
-        console.log(formData);
-            alert("Form Submited");
             const xhr = new XMLHttRequest();
             xhr.open("GET", "submit.json", true);
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xhr.onreadystatechange = function (){
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    //alert('form submitted successfully.');
-                    message = document.getElementById('message');
                     const response = JSON.parse(xhr.responseText);
+                    const message = document.getElementById('message');
                     message.textContent = response.message;
-                    form = document.getElementById('myForm');
-                        form.reset();
-                        //cleaar the message
-                       // form.textContent ='';
+                    document.getElementById('myForm').reset();
                         
                     
 

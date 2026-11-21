@@ -18,12 +18,12 @@
 
     <main>
         <h2>Forms</h2>
-        <form action="form.html" method="post">
+        <form action="form.html" method="post" id="signup-form">
             <fieldset>
                 <legend>Your information</legend>
                 <div class="form-row">
-                    <label for="personname">Full Name</label>
-                    <input id="personname" type="text" name="fullname" placeholder="Full Name">
+                    <label for="fullname">Full Name</label>
+                    <input id="fullname" type="text" name="fullname" placeholder="Full Name">
                 </div>
                 <div class="form-row">
                     <label for="email">Email</label>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="form-row">
                     <label for="age">Age</label>
-                    <Select name="age" id="age">
+                    <select name="age" id="age">
                         <option value="blank"></option>
                         <option value="8">8-10</option>
                         <option value="11">11-12</option>
@@ -51,7 +51,7 @@
                         <option value="16">16-19</option>
                         <option value="20">20-23</option>
                         <option value="24">24+</option>
-                    </Select>
+                    </select>
                 </div>
 
                 <div class="check-row">
